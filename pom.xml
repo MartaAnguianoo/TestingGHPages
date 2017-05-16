@@ -12,26 +12,14 @@
 
 	<properties>
 		<doxygen.config.file>${basedir}/src/main/resources/Doxyfile</doxygen.config.file>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>com.soebes.maven.plugins.dmg</groupId>
-				<artifactId>doxygen-maven-plugin</artifactId>
-				<version>1.0.1</version>
-				<configuration>
-					<configurationFile>${doxygen.config.file}</configurationFile>
-				</configuration>
-			</plugin>
-			
-		</plugins>
-	</build>
-	
+		
 	<dependencies>
 		<dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.11</version>
+            <version>4.12</version>
             <scope>test</scope>
         </dependency>
         
@@ -61,9 +49,57 @@
 			<artifactId>slf4j-api</artifactId>
 			<version>1.6.4</version>
 			<scope>compile</scope>
-		</dependency> 		
-		
-	</dependencies>
+		</dependency> 	
+	</dependencies>		
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.soebes.maven.plugins</groupId>
+				<artifactId>doxygen-maven-plugin</artifactId>
+				<version>1.1.0</version>
+				<configuration>
+					<configurationFile>${doxygen.config.file}</configurationFile>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.6</version>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<!-- here the phase you need -->
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/docs</outputDirectory>
+								<resources>          
+									<resource>
+									<directory>${basedir}/target/doxygen/html</directory>
+									<filtering>true</filtering>
+									</resource>
+								</resources>              
+						</configuration>            
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>3.0.0</version>
+				<configuration>
+				<filesets>
+					<fileset>
+						<directory>${basedir}/docs</directory>
+					</fileset>
+				</filesets>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+	
+	
 	 <reporting>
 			<plugins>
 				<plugin>
